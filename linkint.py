@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 from random import randint
 import time
 import argparse
@@ -20,8 +21,12 @@ parser.add_argument('-o', '--org', type=str, required=True, metavar='',
 args = parser.parse_args()
 
 # scraping
-
-driver = webdriver.Chrome()
+options = Options()
+options.add_argument("--window-size=1920,1080")
+options.add_argument("--start-maximized")
+options.headless = True
+driver = webdriver.Chrome(options=options)
+# driver = webdriver.Chrome()
 URL = "https://www.linkedin.com/login"
 driver.get(URL)
 
@@ -47,7 +52,7 @@ try:
 
     search = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
-            (By.CLASS_NAME, 'search-global-typeahead__input'))
+            (By.XPATH, '//*[@id="global-nav-typeahead"]/input'))
     )
     search.send_keys(org)
     time.sleep(randint(2, 7))
